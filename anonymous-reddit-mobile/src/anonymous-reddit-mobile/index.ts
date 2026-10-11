@@ -1,31 +1,19 @@
 import './meta.js?userscript-metadata';
 
-// Hides the "Get the app" card.
-new MutationObserver(records => {
-    records
-        .map(({ addedNodes }) => Array.from(addedNodes))
-        .flat()
-        .filter(({ nodeType }) => nodeType === Node.ELEMENT_NODE)
-        .forEach(node => {
-            const el = node as Element;
-            switch (el.getAttribute("id")) {
-                case "configured-xpromo-global_direct_blocking":
-                case "configured-xpromo-global_non_direct_blocking":
-                    el.remove();
-                    break;
-                default:
-                    break;
-            }
-        });
-}).observe(
-    document.querySelector("shreddit-app") as Element,
-    { childList: true, subtree: false }
-);
+function deleteGetTheApp() {
+    const card = document.querySelector(
+        "#configured-xpromo-global_direct_blocking, #configured-xpromo-global_non_direct_blocking");
+    if (card !== null) {
+        card.remove();
+    }
 
-// Removes the page scroll lock.
-new MutationObserver(() => {
     const { classList } = document.body;
+    // Removing is a performance-intensive operation, so always test first.
     if (classList.contains("rpl-scroll-lock")) {
         classList.remove("rpl-scroll-lock");
     }
-}).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+}
+
+new MutationObserver(() => setTimeout(deleteGetTheApp, 500))
+    .observe(document.body, { attributes: true, attributeFilter: ["class"] });
+deleteGetTheApp();

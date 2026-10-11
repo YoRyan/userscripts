@@ -2,6 +2,7 @@
 // @name        anonymous-reddit-mobile
 // @namespace   youngryan.com
 // @description Hides the forced login banner on mobile Reddit.
+// @run-at      document-body
 // @match       https://reddit.com/*
 // @match       https://www.reddit.com/*
 // @author      Ryan Young
@@ -10,37 +11,23 @@
 (function () {
 'use strict';
 
-// Hides the "Get the app" card.
-new MutationObserver(records => {
-  records.map(({
-    addedNodes
-  }) => Array.from(addedNodes)).flat().filter(({
-    nodeType
-  }) => nodeType === Node.ELEMENT_NODE).forEach(node => {
-    const el = node;
-    switch (el.getAttribute("id")) {
-      case "configured-xpromo-global_direct_blocking":
-      case "configured-xpromo-global_non_direct_blocking":
-        el.remove();
-        break;
-    }
-  });
-}).observe(document.querySelector("shreddit-app"), {
-  childList: true,
-  subtree: false
-});
-
-// Removes the page scroll lock.
-new MutationObserver(() => {
+function deleteGetTheApp() {
+  const card = document.querySelector("#configured-xpromo-global_direct_blocking, #configured-xpromo-global_non_direct_blocking");
+  if (card !== null) {
+    card.remove();
+  }
   const {
     classList
   } = document.body;
+  // Removing is a performance-intensive operation, so always test first.
   if (classList.contains("rpl-scroll-lock")) {
     classList.remove("rpl-scroll-lock");
   }
-}).observe(document.body, {
+}
+new MutationObserver(() => setTimeout(deleteGetTheApp, 500)).observe(document.body, {
   attributes: true,
   attributeFilter: ["class"]
 });
+deleteGetTheApp();
 
 })();

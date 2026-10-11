@@ -2,6 +2,7 @@
 // @name        anonymous-reddit-mobile
 // @namespace   youngryan.com
 // @description Hides the forced login banner on mobile Reddit.
+// @run-at      document-body
 // @match       https://reddit.com/*
 // @match       https://www.reddit.com/*
 // @author      process.env.AUTHOR
