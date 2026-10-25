@@ -1,8 +1,7 @@
 import './meta.js?userscript-metadata';
 
 function deleteGetTheApp() {
-    const card = document.querySelector(
-        "#configured-xpromo-global_direct_blocking, #configured-xpromo-global_non_direct_blocking");
+    const card = document.querySelector(".configured-xpromo-bottom-sheet");
     if (card !== null) {
         card.remove();
     }
